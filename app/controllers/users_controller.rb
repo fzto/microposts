@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :set_profile, only: [:edit, :update]
   
   def show
     @user = User.find(params[:id])
@@ -18,10 +19,26 @@ class UsersController < ApplicationController
     end
   end
   
+  def edit
+  end
+  
+  def update
+    if @user.update_attributes(user_params)
+      flash[:success] = "Your profile has been updated."
+      redirect_to @user
+    else
+      render 'edit'
+    end
+  end
+  
   private
   
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :profile, :location, :url)
+  end
+  
+  def set_profile
+    @user = User.find(params[:id])
   end
   
 end
